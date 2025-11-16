@@ -18,12 +18,10 @@ document.addEventListener('DOMContentLoaded', () => {
     const API_MODEL = "llama-3.1-8b-instant"; 
 
     // --- DEFINIÇÕES DAS FERRAMENTAS (TODAS DESBLOQUEADAS) ---
-    const toolDefinitions = {
+     const toolDefinitions = {
         'Diagnostico': {
             title: "Diagnóstico Synapse",
             subtitle: "Qual é o seu estado mental? Vamos investigar.",
-            
-            // --- PROMPT DE ENTREVISTA (Sua Ideia) ---
             systemPrompt: `Você é o 'Diagnóstico Synapse', um especialista em performance e psicologia humana. Sua ÚNICA função nesta ferramenta é conduzir uma **entrevista diagnóstica** com o usuário.
 
 **SUAS REGRAS DE OURO:**
@@ -49,28 +47,25 @@ document.addEventListener('DOMContentLoaded', () => {
     * **Padrão Identificado:** (Ex: Você está sobrecarregado pela imensidão da tarefa e isso está drenando sua energia antes mesmo de começar.)
     * **Plano Recomendado:** (Esta é a hora do encaminhamento/venda.) (Ex: Para quebrar essa paralisia, a ferramenta ideal é o **Estrategista Diário** (Premium). Ele é treinado para transformar 'projetos enormes' em micro-passos táticos para você começar a agir em 5 minutos.)
     `,
-            
-            isLocked: false // A entrevista é a ferramenta gratuita
+            isLocked: false // Correto
         },
         'Estrategista': {
             title: "Estrategista Diário",
-            subtitle: "Transforme caos em clareza. Diga-me seu maior desafio para hoje e eu criarei um plano de batalha focado.",
+            subtitle: "Transforme caos em clareza. Diga-me seu maior desafio para hoje.",
             systemPrompt: "Você é o 'Estrategista Diário da Synapse'. Seu único objetivo é criar planos de ação táticos e brutais. O usuário dirá um desafio (ex: 'estudar para prova', 'limpar a casa'). Você deve responder com: 1. **MISSÃO:** (O objetivo claro). 2. **REGRAS DE ENGAJAMENTO:** (3-5 regras curtas para evitar distração). 3. **OBJETIVOS TÁTICOS:** (Um checklist de 3-5 passos acionáveis). Mantenha o tom direto, motivador e militar. Use markdown.",
-            isLocked: false // Desbloqueado
+            isLocked: false // <-- CORRIGIDO
         },
-        // 'Gerente de Energia' FOI REMOVIDO
-        'Mestre': { // O ID 'Mestre' é mantido para não quebrar o HTML
-            // --- MUDANÇA (IDEIA 2) ---
-            title: "Ferreiro de Hábitos", // Nome mudou
-            subtitle: "Falhou? Não se culpe. Vamos 'reforjar' o seu dia agora.", // Subtítulo mudou
-            systemPrompt: "Você é o 'Ferreiro de Hábitos da Synapse'. O usuário confessará uma falha (ex: 'procrastinei 2h no TikTok'). Sua resposta NÃO é uma punição, é um 'Protocolo de Reparo Imediato'. Responda em 3 partes: 1. **Diagnóstico (Sem Culpa):** (Ex: 'Entendido. Você buscou dopamina de curto prazo. Acontece. Vamos reparar isso.'). 2. **Protocolo de Reparo IadgMediato:** (Dê 3 ações curtas para 'salvar' o dia. Ex: '1. Ação Física (1 min): Levante, 10 polichinelos. 2. Ação Mental (2 min): Escreva 1 motivo por que a tarefa original era importante. 3. Ação de Reparo (15 min): Faça 15 minutos da tarefa original.'). 3. **Prevenção:** (Uma dica para amanhã, ex: 'Para amanhã, comece com essa tarefa.'). Use markdown.",
-            isLocked: false // Desbloqueado
+        'Mestre': { 
+            title: "Ferreiro de Hábitos",
+            subtitle: "Falhou? Não se culpe. Vamos 'reforjar' o seu dia agora.",
+            systemPrompt: "Você é o 'Ferreiro de Hábitos da Synapse'. O usuário confessará uma falha (ex: 'procrastinei 2h no TikTok'). Sua resposta NÃO é uma punição, é um 'Protocolo de Reparo Imediato'. Responda em 3 partes: 1. **Diagnóstico (Sem Culpa):** (Ex: 'Entendido. Você buscou dopamina de curto prazo. Acontece. Vamos reparar isso.'). 2. **Protocolo de Reparo Imediato:** (Dê 3 ações curtas para 'salvar' o dia. Ex: '1. Ação Física (1 min): Levante, 10 polichinelos. 2. Ação Mental (2 min): Escreva 1 motivo por que a tarefa original era importante. 3. Ação de Reparo (15 min): Faça 15 minutos da tarefa original.'). 3. **Prevenção:** (Uma dica para amanhã, ex: 'Para amanhã, comece com essa tarefa.'). Use markdown.",
+            isLocked: false // <-- CORRIGIDO
         },
         'Auditor': {
             title: "Auditor de Hábitos",
-            subtitle: "No fim da semana, cole seus registros diários aqui. Eu analisarei seus padrões e entregarei um relatório honesto sobre sua performance.",
+            subtitle: "No fim da semana, cole seus registros diários aqui para um relatório honesto.",
             systemPrompt: "Você é o 'Auditor de Hábitos da Synapse'. O usuário colará um texto longo (provavelmente de vários dias) descrevendo suas ações, falhas e vitórias. Sua tarefa é analisar esse texto e gerar um 'RELATÓRIO DE PERFORMANCE SEMANAL' em 3 seções: 1. **VITÓRIAS:** (Onde o usuário mandou bem). 2. **GARGALOS:** (Onde o usuário falhou repetidamente). 3. **DIRETRIZ DA SEMANA:** (Uma única regra ou foco para a próxima semana). Seja analítico, direto e use os dados do usuário para embasar sua análise. Use markdown.",
-            isLocked: false // Desbloqueado
+            isLocked: false // <-- CORRIGIDO
         }
     };
     
@@ -117,35 +112,37 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // --- Mudar Ferramenta ---
     function setActiveTool(toolName, isInitialLoad = false) { 
-        currentTool = toolName;
-        currentChatId = null; 
-        const toolInfo = toolDefinitions[toolName];
-        
-        if (!toolInfo) {
-            console.error(`Ferramenta não encontrada: ${toolName}`);
-            return;
-        }
+    currentTool = toolName;
+    currentChatId = null; 
+    const toolInfo = toolDefinitions[toolName];
+    
+    if (!toolInfo) {
+        console.error(`Ferramenta não encontrada: ${toolName}`);
+        return;
+    }
 
-        conversationHistory = [{ role: "system", content: toolInfo.systemPrompt }];
+    conversationHistory = [{ role: "system", content: toolInfo.systemPrompt }];
 
-        document.querySelectorAll('.tool-item').forEach(item => {
-            item.classList.toggle('active', item.id === `tool${toolName}`);
-        });
-        
-        chatTitle.textContent = toolInfo.title.toUpperCase();
-        chatSubtitle.textContent = toolInfo.subtitle;
-        chatInput.placeholder = "Digite sua mensagem aqui..."; // Texto genérico
-        
-        messagesContainer.innerHTML = ''; 
-        
-        // Mensagem inicial direta (só o subtítulo)
-        
-        if ((!isInitialLoad || (isInitialLoad && !isMobile)) && chatInput) {
-            chatInput.focus();
-        }
+    document.querySelectorAll('.tool-item').forEach(item => {
+        item.classList.toggle('active', item.id === `tool${toolName}`);
+    });
+    
+    // 1. Popula o título e o card
+    chatTitle.textContent = toolInfo.title.toUpperCase();
+    chatSubtitle.textContent = toolInfo.subtitle; // <-- AGORA VAI FUNCIONAR
+    chatInput.placeholder = "Digite sua mensagem aqui..."; 
+    
+    // 2. CORREÇÃO: Remove apenas as bolhas de chat, deixando o card intacto.
+    const allMessages = messagesContainer.querySelectorAll('.chat-message-user, .chat-message-ia');
+    allMessages.forEach(msg => msg.remove());
+    
+    // 3. Detecta se é mobile (isso é do seu código original, só mudei a var)
+    const isMobile = window.innerWidth <= 768; 
 
-        // Lógica de bloqueio NÃO EXISTE AQUI (é a versão PRO)
-    } 
+    if ((!isInitialLoad || (isInitialLoad && !isMobile)) && chatInput) {
+        chatInput.focus();
+    }
+}
 
     // --- Enviar Mensagem (VERSÃO ROBUSTA) ---
     async function sendMessage() {
