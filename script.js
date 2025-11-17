@@ -1,71 +1,78 @@
-/*
- * js/app-pro.js
- * (VERSÃO PRO - REVISADA E CORRIGIDA)
- * 1. Garantia de reativação de botões (correção do bug de 'loading').
- * 2. Listeners de evento seguros (não quebra se um elemento não existir).
- * 3. Todas as ferramentas desbloqueadas e sem limite de uso.
- */
-
+/* script.js (VERSÃO PRO - COM ANIMAÇÃO EM TODAS AS FERRAMENTAS) */
 document.addEventListener('DOMContentLoaded', () => {
     
-    // --- 1. INICIALIZAÇÃO DO FIREBASE ---
     const db = firebase.firestore();
-
-    
-    // --- 1. CONFIGURAÇÕES E VARIÁVEIS PRINCIPAIS (PRO) ---
-    const MAX_USAGE = 9999999; // Acesso Ilimitado
     const API_URL = "https://long-block-7f38.kayquedamas.workers.dev";
     const API_MODEL = "llama-3.1-8b-instant"; 
 
-    // --- DEFINIÇÕES DAS FERRAMENTAS (TODAS DESBLOQUEADAS) ---
+    // --- DEFINIÇÕES DAS FERRAMENTAS (COM EXEMPLOS DE ANIMAÇÃO) ---
      const toolDefinitions = {
         'Diagnostico': {
             title: "Diagnóstico Synapse",
-            subtitle: "Qual é o seu estado mental? Vamos investigar.",
-            systemPrompt: `Você é o 'Diagnóstico Synapse', um especialista em performance e psicologia humana. Sua ÚNICA função nesta ferramenta é conduzir uma **entrevista diagnóstica** com o usuário.
+            subtitle: "Para começar, me diga...", // Parte estática
+            typewriterExamples: [ // ✅ Parte animada
+                "o que está na sua mente?",
+                "seu maior vício.",
+                "seu impulso de procrastinar.",
+                "o que você está evitando."
+            ],
+            systemPrompt: `Você é o Synapse, mas você não é um robô. Você é um 'Amigo Preocupado'. Seu tom é empático, humano, e você soa como uma pessoa normal (use 'cara', 'poxa', 'tamo junto'). Sua primeira missão é fazer o usuário se sentir SEGURO e OUVIDO, sem julgamento.
 
-**SUAS REGRAS DE OURO:**
-1.  **NUNCA DÊ UM DIAGNÓSTICO COM SÓ UMA MENSAGEM.** Sua resposta padrão deve ser sempre uma **PERGUNTA**.
-2.  **SEMPRE FAÇA PERGUNTAS DE APROFUNDAMENTO.** Você precisa de pelo menos 2 ou 3 respostas do usuário para ter dados suficientes.
-3.  **NÃO DÊ SOLUÇÕES OU CONSELHOS** durante a entrevista. Apenas colete dados.
+**FLUXO DA CONVERSA:**
 
-**FLUXO OBRIGATÓRIO:**
+1.  **A ABERTURA:** O usuário vai digitar algo.
+    * **SE FOR UMA CONFISSÃO DIRETA (ex: 'Fiquei 3h no TikTok'):** Vá direto para o ACOLHIMENTO.
+    * **SE FOR VAGO (ex: 'Oi', 'Quero começar', 'Não sei o que falar'):** Você deve ser proativo.
+        * **Exemplo de IA:** "E aí, cara. Tamo junto. Pra gente começar, me fala em uma frase: qual é o sentimento ou o problema que tá mais pesando na sua cabeça agora?"
 
-1.  **PRIMEIRA MENSAGEM (Usuário):** (Ex: "Procrastinei o dia todo.")
-2.  **SEGUNDA MENSAGEM (IA - PERGUNTA 1):** (Ex: "Entendido. Para eu saber a causa raiz: foi uma procrastinação por 'Energia' (cansaço/falta de ânimo) ou por 'Tarefa' (medo/dúvida sobre o que fazer)?")
-3.  **TERCEIRA MENSAGEM (Usuário):** (Ex: "Acho que de Tarefa. Tenho um TCC enorme.")
-4.  **QUARTA MENSAGEM (IA - PERGUNTA 2):** (Ex: "Certo, TCC é um projeto grande. O que exatamente você está evitando? A página em branco, a pesquisa, ou organizar o que já tem?")
-5.  **QUINTA MENSAGEM (Usuário):** (Ex: "A página em branco. Não sei nem por onde começar.")
+2.  **ACOLHIMENTO (A 'Preocupação'):** O usuário confessou. Sua primeira resposta DEVE ser validação.
+    * **Exemplo:** "Poxa, cara. Eu sei como é frustrante se sentir preso nesse loop. Mas fica tranquilo, tô aqui pra ouvir. O que você acha que disparou isso hoje?"
 
-**AGORA, E SOMENTE AGORA, VOCÊ TEM DADOS SUFICIENTES.**
+3.  **INVESTIGAÇÃO (A 'Conversa Normal'):** Faça perguntas abertas para entender a causa raiz.
+    * **Exemplo:** "Entendi... então o problema não é o TikTok, é o 'escape' da ansiedade do TCC. Faz total sentido. E o que no TCC te trava mais? É a página em branco?"
 
-6.  **MENSAGEM FINAL (IA - O DIAGNÓSTICO COMPLETO):**
-    Quando você sentir que tem todos os dados, sua ÚNICA resposta deve ser formatada assim:
+4.  **DIAGNÓSTICO (A 'Ajuda'):** Depois de 2-3 trocas, dê um diagnóstico empático.
+    * **Exemplo:** "Olha, pelo que você tá me falando, isso não é preguiça. Isso é 'Paralisia por Análise' clássica."
 
-    **SEU DIAGNÓSTICO COMPLETO:**
-    * **Problema Raiz:** (Ex: Paralisia por Análise, medo da 'página em branco'.)
-    * **Padrão Identificado:** (Ex: Você está sobrecarregado pela imensidão da tarefa e isso está drenando sua energia antes mesmo de começar.)
-    * **Plano Recomendado:** (Esta é a hora do encaminhamento/venda.) (Ex: Para quebrar essa paralisia, a ferramenta ideal é o **Estrategista Diário** (Premium). Ele é treinado para transformar 'projetos enormes' em micro-passos táticos para você começar a agir em 5 minutos.)
-    `,
-            isLocked: false // Correto
+5.  **ENCAMINHAMENTO (A 'Indicação'):** Como esta é a versão PRO, você recomenda a ferramenta certa.
+    * **Exemplo:** "Para *quebrar* essa paralisia, a ferramenta 'Estrategista Diário' aqui do lado é perfeita. Ela é treinada pra transformar 'projetos enormes' em micro-tarefas. Quer que a gente pule pra lá?"
+`,
+            isLocked: false 
         },
         'Estrategista': {
             title: "Estrategista Diário",
-            subtitle: "Transforme caos em clareza. Diga-me seu maior desafio para hoje.",
+            subtitle: "Sua missão de hoje é...", // Parte estática
+            typewriterExamples: [ // ✅ Parte animada
+                "concluir meu TCC.",
+                "estudar para a prova.",
+                "limpar a casa toda.",
+                "fazer 30 min de cardio."
+            ],
             systemPrompt: "Você é o 'Estrategista Diário da Synapse'. Seu único objetivo é criar planos de ação táticos e brutais. O usuário dirá um desafio (ex: 'estudar para prova', 'limpar a casa'). Você deve responder com: 1. **MISSÃO:** (O objetivo claro). 2. **REGRAS DE ENGAJAMENTO:** (3-5 regras curtas para evitar distração). 3. **OBJETIVOS TÁTICOS:** (Um checklist de 3-5 passos acionáveis). Mantenha o tom direto, motivador e militar. Use markdown.",
-            isLocked: false // <-- CORRIGIDO
+            isLocked: false 
         },
         'Mestre': { 
             title: "Ferreiro de Hábitos",
-            subtitle: "Falhou? Não se culpe. Vamos 'reforjar' o seu dia agora.",
+            subtitle: "Confesse sua última falha...", // Parte estática
+            typewriterExamples: [ // ✅ Parte animada
+                "fiquei 2h no TikTok.",
+                "comi fast-food de novo.",
+                "gastei dinheiro por impulso.",
+                "falhei no meu treino."
+            ],
             systemPrompt: "Você é o 'Ferreiro de Hábitos da Synapse'. O usuário confessará uma falha (ex: 'procrastinei 2h no TikTok'). Sua resposta NÃO é uma punição, é um 'Protocolo de Reparo Imediato'. Responda em 3 partes: 1. **Diagnóstico (Sem Culpa):** (Ex: 'Entendido. Você buscou dopamina de curto prazo. Acontece. Vamos reparar isso.'). 2. **Protocolo de Reparo Imediato:** (Dê 3 ações curtas para 'salvar' o dia. Ex: '1. Ação Física (1 min): Levante, 10 polichinelos. 2. Ação Mental (2 min): Escreva 1 motivo por que a tarefa original era importante. 3. Ação de Reparo (15 min): Faça 15 minutos da tarefa original.'). 3. **Prevenção:** (Uma dica para amanhã, ex: 'Para amanhã, comece com essa tarefa.'). Use markdown.",
-            isLocked: false // <-- CORRIGIDO
+            isLocked: false 
         },
         'Auditor': {
             title: "Auditor de Hábitos",
-            subtitle: "No fim da semana, cole seus registros diários aqui para um relatório honesto.",
-            systemPrompt: "Você é o 'Auditor de Hábitos da Synapse'. O usuário colará um texto longo (provavelmente de vários dias) descrevendo suas ações, falhas e vitórias. Sua tarefa é analisar esse texto e gerar um 'RELATÓRIO DE PERFORMANCE SEMANAL' em 3 seções: 1. **VITÓRIAS:** (Onde o usuário mandou bem). 2. **GARGALOS:** (Onde o usuário falhou repetidamente). 3. **DIRETRIZ DA SEMANA:** (Uma única regra ou foco para a próxima semana). Seja analítico, direto e use os dados do usuário para embasar sua análise. Use markdown.",
-            isLocked: false // <-- CORRIGIDO
+            subtitle: "Cole aqui seu relatório semanal...", // Parte estática
+            typewriterExamples: [ // ✅ Parte animada
+                "Segunda: falhei. Terça: venci.",
+                "Meu foco essa semana foi 5/10.",
+                "Meus padrões de sono."
+            ],
+            systemPrompt: "Você é o 'Auditor de Hábitos da Synapse'. O usuário colará um texto longo (provavelmente de vários dias) descrevendo suas ações, falhas e vitórias. Sua tarefa é analisar esse texto e gerar um 'RELATÓRIOS DE PERFORMANCE SEMANAL' em 3 seções: 1. **VITÓRIAS:** (Onde o usuário mandou bem). 2. **GARGALOS:** (Onde o usuário falhou repetidamente). 3. **DIRETRIZ DA SEMANA:** (Uma única regra ou foco para a próxima semana). Seja analítico, direto e use os dados do usuário para embasar sua análise. Use markdown.",
+            isLocked: false 
         }
     };
     
@@ -73,6 +80,7 @@ document.addEventListener('DOMContentLoaded', () => {
     let currentTool = 'Diagnostico'; 
     let conversationHistory = []; 
     let currentChatId = null; 
+    let currentTypewriterTimeout = null; // ✅ Variável de controle da animação
 
     
     // --- 2. SELETORES DE ELEMENTOS ---
@@ -89,81 +97,70 @@ document.addEventListener('DOMContentLoaded', () => {
     const newChatBtn = document.getElementById('newChatBtn');
     const scrollingContainer = document.querySelector('.chat-messages');
     
-
-    
     // --- 3. FUNÇÕES ---
 
-    // --- Funções do Chat ---
+    // Funções do Chat (sem mudança)
     function addMessage(message, isUser, isError = false) {
         const messageDiv = document.createElement('div');
         messageDiv.classList.add(isUser ? 'chat-message-user' : 'chat-message-ia');
-        
         if (isError) messageDiv.classList.add('brutal-red', 'font-bold');
-        
         let formattedMessage = message.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
         formattedMessage = formattedMessage.replace(/\*(.*?)\*/g, '<em>$1</em>');
         formattedMessage = formattedMessage.replace(/\n/g, '<br>');
-
         messageDiv.innerHTML = formattedMessage;
         messagesContainer.appendChild(messageDiv);
         scrollingContainer.scrollTop = scrollingContainer.scrollHeight;
-        
     }
 
-    // --- Mudar Ferramenta ---
+    // --- ✅ setActiveTool (ATUALIZADA) ---
     function setActiveTool(toolName, isInitialLoad = false) { 
-    currentTool = toolName;
-    currentChatId = null; 
-    const toolInfo = toolDefinitions[toolName];
-    
-    if (!toolInfo) {
-        console.error(`Ferramenta não encontrada: ${toolName}`);
-        return;
-    }
+        currentTool = toolName;
+        currentChatId = null; 
+        const toolInfo = toolDefinitions[toolName];
+        
+        if (!toolInfo) {
+            console.error(`Ferramenta não encontrada: ${toolName}`);
+            return;
+        }
 
-    conversationHistory = [{ role: "system", content: toolInfo.systemPrompt }];
+        conversationHistory = [{ role: "system", content: toolInfo.systemPrompt }];
 
-    document.querySelectorAll('.tool-item').forEach(item => {
-        item.classList.toggle('active', item.id === `tool${toolName}`);
-    });
-    
-    // 1. Popula o título e o card
-    chatTitle.textContent = toolInfo.title.toUpperCase();
-    chatSubtitle.textContent = toolInfo.subtitle; // <-- AGORA VAI FUNCIONAR
-    chatInput.placeholder = "Digite sua mensagem aqui..."; 
-    
-    // 2. CORREÇÃO: Remove apenas as bolhas de chat, deixando o card intacto.
-    const allMessages = messagesContainer.querySelectorAll('.chat-message-user, .chat-message-ia');
-    allMessages.forEach(msg => msg.remove());
-    
-    // 3. Detecta se é mobile (isso é do seu código original, só mudei a var)
-    const isMobile = window.innerWidth <= 768; 
+        document.querySelectorAll('.tool-item').forEach(item => {
+            item.classList.toggle('active', item.id === `tool${toolName}`);
+        });
+        
+        chatTitle.textContent = toolInfo.title.toUpperCase();
+        
+        // ✅ ATUALIZA O HTML DO SUBTÍTULO E CHAMA A ANIMAÇÃO
+        if (chatSubtitle) {
+             chatSubtitle.innerHTML = `${toolInfo.subtitle} <span id="typewriter-text" class="brutal-red font-bold"></span>`;
+             startTypewriterAnimation(toolInfo.typewriterExamples || []); // Passa os exemplos da ferramenta
+        }
+        
+        // Limpa apenas as bolhas de chat, preservando o card
+        const allMessages = messagesContainer.querySelectorAll('.chat-message-user, .chat-message-ia');
+        allMessages.forEach(msg => msg.remove());
+        
+        const isMobile = window.innerWidth <= 768; 
+        if ((!isInitialLoad || (isInitialLoad && !isMobile)) && chatInput) {
+            chatInput.focus();
+        }
+    } 
 
-    if ((!isInitialLoad || (isInitialLoad && !isMobile)) && chatInput) {
-        chatInput.focus();
-    }
-}
-
-    // --- Enviar Mensagem (VERSÃO ROBUSTA) ---
+    // --- sendMessage (sem mudança) ---
     async function sendMessage() {
         const message = chatInput.value.trim();
         if (message === '') return;
-
         addMessage(message, true);
         chatInput.value = '';
         chatInput.style.height = 'auto';
-        
         conversationHistory.push({ role: "user", content: message });
-        
         sendBtn.innerHTML = '<div id="loadingSpinner"></div>';
         sendBtn.disabled = true;
         chatInput.disabled = true;
-
-        // Lógica de Timeout (20 segundos)
         const controller = new AbortController();
         const signal = controller.signal;
         const timeoutId = setTimeout(() => controller.abort(), 20000); 
-
         try {
             const payload = {
                 model: API_MODEL,
@@ -172,35 +169,29 @@ document.addEventListener('DOMContentLoaded', () => {
                 max_tokens: 1024,
                 stream: false 
             };
-            
             const response = await fetch(API_URL, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(payload),
                 signal: signal
             });
-
-            clearTimeout(timeoutId); // Resposta chegou, cancela o timeout
-
+            clearTimeout(timeoutId); 
             if (!response.ok) {
                 const errorData = await response.json();
                 console.error("Erro da API Groq:", errorData);
                 addMessage(`Erro da API: ${errorData.error.message}`, false, true);
-                return; // O 'finally' vai rodar
-            }
-
-            const data = await response.json();
-            
-            if (data.choices && data.choices[0].message.content) {
-                const iaMessage = data.choices[0].message.content;
-                addMessage(iaMessage, false);
-                conversationHistory.push({ role: "assistant", content: iaMessage });
-                await saveChatToFirestore();
             } else {
-                console.warn("Resposta da API vazia:", data);
-                addMessage("Recebi uma resposta vazia da IA. Tente novamente.", false, true);
+                const data = await response.json();
+                if (data.choices && data.choices[0].message.content) {
+                    const iaMessage = data.choices[0].message.content;
+                    addMessage(iaMessage, false);
+                    conversationHistory.push({ role: "assistant", content: iaMessage });
+                    await saveChatToFirestore();
+                } else {
+                    console.warn("Resposta da API vazia:", data);
+                    addMessage("Recebi uma resposta vazia da IA. Tente novamente.", false, true);
+                }
             }
-
         } catch (error) {
             clearTimeout(timeoutId); 
             if (error.name === 'AbortError') {
@@ -211,26 +202,21 @@ document.addEventListener('DOMContentLoaded', () => {
                 addMessage(`Erro de conexão: ${error.message}`, false, true);
             }
         } finally {
-            // ESTE BLOCO AGORA SEMPRE RODA, CORRIGINDO O BUG
             clearTimeout(timeoutId); 
             sendBtn.innerHTML = '<i class="fas fa-paper-plane"></i>';
             sendBtn.disabled = false;
-            chatInput.disabled = false; // A linha mais importante
-            
-            if (chatInput.disabled === false) {
-                chatInput.focus();
-            }
+            chatInput.disabled = false;
+            chatInput.focus();
         }
     } 
     
-    // --- Salvar no Firestore ---
+    // --- saveChatToFirestore (sem mudança) ---
     async function saveChatToFirestore() {
         const chatData = {
             ferramenta: currentTool,
             historico: conversationHistory,
             ultimaAtualizacao: firebase.firestore.FieldValue.serverTimestamp()
         };
-
         try {
             if (currentChatId) {
                 const chatRef = db.collection("chats").doc(currentChatId);
@@ -247,23 +233,77 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
-    // --- Funções do Menu ---
+    // --- Funções do Menu (sem mudança) ---
     function openSidebar() {
         if (sidebar) sidebar.classList.add('open');
         if (overlay) overlay.classList.add('open');
     }
-
     function closeSidebar() {
         if (sidebar) sidebar.classList.remove('open');
         if (overlay) overlay.classList.remove('open');
     }
-
-    // --- 4. EVENT LISTENERS E INICIALIZAÇÃO (VERSÃO SEGURA) ---
     
+    // --- ✅ NOVA FUNÇÃO "TYPEWRITER" (ATUALIZADA) ---
+    function startTypewriterAnimation(examples = []) { // Aceita 'examples'
+        // 1. Para a animação anterior (se houver)
+        if (currentTypewriterTimeout) {
+            clearTimeout(currentTypewriterTimeout);
+        }
+
+        const targetElement = document.getElementById('typewriter-text');
+        if (!targetElement || examples.length === 0) {
+            if(targetElement) targetElement.textContent = ""; // Limpa se não houver exemplos
+            return; 
+        }
+
+        let exampleIndex = 0;
+        let charIndex = 0;
+        let isDeleting = false;
+        const typeSpeed = 100; 
+        const deleteSpeed = 50; 
+        const delayBetween = 2000; 
+
+        function type() {
+            // Se a ferramenta mudou, pare a animação
+            // (Esta verificação é uma garantia extra)
+            if (toolDefinitions[currentTool].typewriterExamples !== examples) {
+                 clearTimeout(currentTypewriterTimeout);
+                 return;
+            }
+
+            const currentText = examples[exampleIndex];
+            
+            if (isDeleting) {
+                // Apagando
+                targetElement.textContent = currentText.substring(0, charIndex - 1);
+                charIndex--;
+                if (charIndex === 0) {
+                    isDeleting = false;
+                    exampleIndex = (exampleIndex + 1) % examples.length; 
+                    currentTypewriterTimeout = setTimeout(type, 500); 
+                } else {
+                    currentTypewriterTimeout = setTimeout(type, deleteSpeed);
+                }
+            } else {
+                // Digitando
+                targetElement.textContent = currentText.substring(0, charIndex + 1);
+                charIndex++;
+                if (charIndex === currentText.length) {
+                    isDeleting = true;
+                    currentTypewriterTimeout = setTimeout(type, delayBetween); 
+                } else {
+                    currentTypewriterTimeout = setTimeout(type, typeSpeed);
+                }
+            }
+        }
+        
+        type(); // Inicia a animação
+    }
+
+    // --- 4. EVENT LISTENERS (sem mudança) ---
     if (openBtn) openBtn.addEventListener('click', openSidebar);
     if (closeBtn) closeBtn.addEventListener('click', closeSidebar);
     if (overlay) overlay.addEventListener('click', closeSidebar);
-    
     document.querySelectorAll('.tool-item').forEach(item => {
         item.addEventListener('click', (e) => {
             const toolName = item.id.replace('tool', '');
@@ -279,9 +319,7 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         });
     });
-
     if (sendBtn) sendBtn.addEventListener('click', sendMessage);
-    
     if (chatInput) {
         chatInput.addEventListener('keydown', (e) => {
             if (e.key === 'Enter' && !e.shiftKey) {
@@ -289,13 +327,11 @@ document.addEventListener('DOMContentLoaded', () => {
                 sendMessage();
             }
         });
-        
         chatInput.addEventListener('input', () => {
             chatInput.style.height = 'auto';
             chatInput.style.height = (chatInput.scrollHeight) + 'px';
         });
     }
-
     if (newChatBtn) {
         newChatBtn.addEventListener('click', () => {
             setActiveTool(currentTool, false);
@@ -307,5 +343,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // --- 5. INICIALIZAÇÃO DA PÁGINA ---
     setActiveTool('Diagnostico', true); 
+    // A animação agora é chamada DENTRO do setActiveTool
 
 }); // Fim do 'DOMContentLoaded'
